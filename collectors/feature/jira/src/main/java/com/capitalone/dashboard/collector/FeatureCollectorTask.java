@@ -247,13 +247,18 @@ public class FeatureCollectorTask extends CollectorTask<FeatureCollector> {
         long storyDataStart = System.currentTimeMillis();
         AtomicLong count = new AtomicLong();
 
-        if (Objects.equals(collector.getMode(), JiraMode.Team)) {
+        if (true) {
             List<Scope> projects = new ArrayList<>(getScopeList(collector.getId()));
             projects.forEach(project -> {
                 LOGGER.info("Collecting " + count.incrementAndGet() + " of " + projects.size() + " projects.");
 
                 long lastCollection = System.currentTimeMillis();
-                FeatureEpicResult featureEpicResult = jiraClient.getIssues(project);
+                FeatureEpicResult featureEpicResult =null;
+                if(project.getpId().equalsIgnoreCase("29505")) {
+                featureEpicResult = jiraClient.getIssues(project);
+                }else {
+                	featureEpicResult = new FeatureEpicResult();
+                }
                 List<Feature> features = featureEpicResult.getFeatureList();
                 saveFeatures(features, collector);
                 updateFeaturesWithLatestEpics(featureEpicResult.getEpicList(), collector);
@@ -315,7 +320,7 @@ public class FeatureCollectorTask extends CollectorTask<FeatureCollector> {
      */
     private Set<Scope> getScopeList(ObjectId collectorId) {
         Set<Scope> projects = new HashSet<>();
-        if(featureSettings.isCollectorItemOnlyUpdate()){
+        if(!featureSettings.isCollectorItemOnlyUpdate()){
             for(FeatureBoard featureBoard: enabledFeatureBoards(collectorId)){
                 Scope scope = projectRepository.findByCollectorIdAndPId(collectorId, featureBoard.getProjectId());
                 if(scope != null){

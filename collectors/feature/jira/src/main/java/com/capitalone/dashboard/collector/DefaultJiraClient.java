@@ -304,7 +304,8 @@ public class DefaultJiraClient implements JiraClient {
         Map<String, Epic> epicMap = new HashMap<>();
         FeatureEpicResult featureEpicResult = new FeatureEpicResult();
 
-        String lookBackDate = getUpdatedSince(project.getLastCollected());
+       // String lookBackDate = getUpdatedSince(project.getLastCollected());
+        String lookBackDate = "2019/01/06 09:34";
 
         String issueTypes = featureSettings.getJiraIssueTypeNames() == null ? DEFAULT_ISSUE_TYPES : String.join(",", featureSettings.getJiraIssueTypeNames());
 
