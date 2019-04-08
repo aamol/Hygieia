@@ -26,6 +26,9 @@ public class HudsonSettings {
     private int pageSize;
     @Value("${folderDepth:10}")
     private int folderDepth;
+    
+    //Setting for Manual override of enabled
+    private boolean manualOverride =false;
 
     public String getCron() {
         return cron;
@@ -115,4 +118,13 @@ public class HudsonSettings {
     public int getFolderDepth() {
         return folderDepth;
     }
+
+	public boolean isManualOverride() {
+		return manualOverride;
+	}
+
+	public void setManualOverride(boolean manualOverride) {
+		this.manualOverride = manualOverride;
+	}
+
 }

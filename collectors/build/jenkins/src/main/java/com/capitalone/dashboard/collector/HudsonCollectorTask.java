@@ -167,7 +167,7 @@ public class HudsonCollectorTask extends CollectorTask<HudsonCollector> {
         }
         List<HudsonJob> stateChangeJobList = new ArrayList<>();
         for (HudsonJob job : existingJobs) {
-            if ((job.isEnabled() && !uniqueIDs.contains(job.getId())) ||  // if it was enabled but not on a dashboard
+            if ( !hudsonSettings.isManualOverride() && (job.isEnabled() && !uniqueIDs.contains(job.getId())) ||  // if it was enabled but not on a dashboard
                     (!job.isEnabled() && uniqueIDs.contains(job.getId()))) { // OR it was disabled and now on a dashboard
                 job.setEnabled(uniqueIDs.contains(job.getId()));
                 stateChangeJobList.add(job);

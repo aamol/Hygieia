@@ -71,7 +71,7 @@ public class DefaultJiraClient implements JiraClient {
 
     private static final String ISSUE_BY_BOARD_FULL_REFRESH_REST_SUFFIX = "rest/agile/1.0/%s/%s/issue?jql=issueType in ('%s') and updatedDate>='%s'&fields=id&startAt=%s";
 
-    private static final String STATIC_ISSUE_FIELDS = "id,key,issuetype,status,summary,created,updated,project,issuelinks,assignee,sprint,epic,aggregatetimeoriginalestimate,timeoriginalestimate";
+    private static final String STATIC_ISSUE_FIELDS = "id,key,issuetype,status,summary,created,updated,project,issuelinks,assignee,sprint,epic,priority,aggregatetimeoriginalestimate,timeoriginalestimate";
 
     private static final String DEFAULT_ISSUE_TYPES = "Story,Epic";
     private static final int JIRA_BOARDS_PAGING = 50;
@@ -488,6 +488,12 @@ public class DefaultJiraClient implements JiraClient {
         if (sprint != null) {
             processSprintData(feature, sprint);
         }
+        if(fields.get("priority")!=null) {
+        	feature.setIsDefect("true");
+        	JSONObject priority = (JSONObject) fields.get("priority");
+            feature.setPriority(priority != null ? getString(priority, "id") : "");
+        }
+        
         JSONObject assignee = (JSONObject) fields.get("assignee");
         processAssigneeData(feature, assignee);
         return feature;
