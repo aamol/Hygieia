@@ -155,7 +155,7 @@ public class SonarCollectorTask extends CollectorTask<SonarCollector> {
         udId.add(collector.getId());
         for (SonarProject job : existingProjects) {
             // collect the jobs that need to change state : enabled vs disabled.
-            if ((job.isEnabled() && !uniqueIDs.contains(job.getId())) ||  // if it was enabled but not on a dashboard
+            if (!sonarSettings.isManualOverride() && (job.isEnabled() && !uniqueIDs.contains(job.getId())) ||  // if it was enabled but not on a dashboard
                     (!job.isEnabled() && uniqueIDs.contains(job.getId()))) { // OR it was disabled and now on a dashboard
                 job.setEnabled(uniqueIDs.contains(job.getId()));
                 stateChangeJobList.add(job);

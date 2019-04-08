@@ -18,6 +18,9 @@ public class SonarSettings {
     private List<Double> versions;
     private List<String> metrics;
     private List<String> niceNames;
+    
+    //Setting for Manual override of enabled
+    private boolean manualOverride =false;    
 
     public String getCron() {
         return cron;
@@ -74,5 +77,13 @@ public class SonarSettings {
     public void setNiceNames(List<String> niceNames) {
         this.niceNames = niceNames;
     }
+
+	public boolean isManualOverride() {
+		return manualOverride;
+	}
+
+	public void setManualOverride(boolean manualOverride) {
+		this.manualOverride = manualOverride;
+	}
 
 }
