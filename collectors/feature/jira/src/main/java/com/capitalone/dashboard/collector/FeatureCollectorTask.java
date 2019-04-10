@@ -30,6 +30,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -132,7 +133,7 @@ public class FeatureCollectorTask extends CollectorTask<FeatureCollector> {
             long startTime = System.currentTimeMillis();
             long diff = TimeUnit.MILLISECONDS.toHours(startTime - collector.getLastRefreshTime());
             LOGGER.info("JIRA Collector is set to work in " + collector.getMode() + " mode");
-            if (diff > featureSettings.getRefreshTeamAndProjectHours()) {
+            if (diff <= featureSettings.getRefreshTeamAndProjectHours()) {
                 LOGGER.info("Hours since last run = " + diff + ". Collector is about to refresh Team/Board information");
                 List<Team> teams = updateTeamInformation(collector);
                 Set<Scope> scopes = updateProjectInformation(collector);
@@ -247,7 +248,29 @@ public class FeatureCollectorTask extends CollectorTask<FeatureCollector> {
         long storyDataStart = System.currentTimeMillis();
         AtomicLong count = new AtomicLong();
 
-        if (true) {
+        if (featureSettings.getProjectKeys() != null && featureSettings.getProjectKeys().length > 0) {
+            List<Scope> projects = new ArrayList<>(getScopeList(collector.getId()));
+            projects.forEach(project -> {
+                LOGGER.info("Collecting " + count.incrementAndGet() + " of " + projects.size() + " projects.");
+
+                long lastCollection = System.currentTimeMillis();
+                FeatureEpicResult featureEpicResult =null;
+                boolean containsProjectKey = Arrays.stream(featureSettings.getProjectKeys()).anyMatch(project.getProjectKey()::equals);
+                if(containsProjectKey) {
+                	featureEpicResult = jiraClient.getIssues(project);
+                } else {
+                	featureEpicResult = new FeatureEpicResult();
+                }
+                List<Feature> features = featureEpicResult.getFeatureList();
+                saveFeatures(features, collector);
+                updateFeaturesWithLatestEpics(featureEpicResult.getEpicList(), collector);
+                log("Story Data Collected since " + LocalDateTime.ofInstant(Instant.ofEpochMilli(project.getLastCollected()), ZoneId.systemDefault()), storyDataStart, features.size());
+
+                project.setLastCollected(lastCollection); //set it after everything is successfully done
+                projectRepository.save(project);
+
+            });
+        } else if (Objects.equals(collector.getMode(), JiraMode.Team)) {
             List<Scope> projects = new ArrayList<>(getScopeList(collector.getId()));
             projects.forEach(project -> {
                 LOGGER.info("Collecting " + count.incrementAndGet() + " of " + projects.size() + " projects.");

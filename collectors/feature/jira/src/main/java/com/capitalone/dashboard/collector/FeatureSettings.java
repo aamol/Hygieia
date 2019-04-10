@@ -28,6 +28,7 @@ public class FeatureSettings {
 	private String jiraOauthExpiretime;
 	private String jiraProxyUrl;
 	private String jiraProxyPort;
+	private String [] projectKeys;
 	/**
 	 * In Jira, general IssueType IDs are associated to various "issue"
 	 * attributes. However, there is one attribute which this collector's
@@ -288,4 +289,13 @@ public class FeatureSettings {
 	public void setJiraEpicId(String jiraEpicId) {
 		this.jiraEpicId = jiraEpicId;
 	}
+
+	public String[] getProjectKeys() {
+		return projectKeys;
+	}
+
+	public void setProjectKeys(String[] projectKeys) {
+		this.projectKeys = projectKeys;
+	}
+	
 }
