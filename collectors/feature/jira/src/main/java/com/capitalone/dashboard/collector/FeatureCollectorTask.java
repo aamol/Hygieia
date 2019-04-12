@@ -133,7 +133,7 @@ public class FeatureCollectorTask extends CollectorTask<FeatureCollector> {
             long startTime = System.currentTimeMillis();
             long diff = TimeUnit.MILLISECONDS.toHours(startTime - collector.getLastRefreshTime());
             LOGGER.info("JIRA Collector is set to work in " + collector.getMode() + " mode");
-            if (diff <= featureSettings.getRefreshTeamAndProjectHours()) {
+            if (diff > featureSettings.getRefreshTeamAndProjectHours()) {
                 LOGGER.info("Hours since last run = " + diff + ". Collector is about to refresh Team/Board information");
                 List<Team> teams = updateTeamInformation(collector);
                 Set<Scope> scopes = updateProjectInformation(collector);
