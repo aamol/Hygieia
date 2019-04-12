@@ -127,11 +127,13 @@ public class DefaultJiraClient implements JiraClient {
         for (Object obj : projects) {
             JSONObject jo = (JSONObject) obj;
             String pId = getString(jo, "id");
+            String pKey = getString(jo, "key");
             String pName = getString(jo, "name").trim();
             if (!StringUtils.isEmpty(pName)) {
                 Scope scope = new Scope();
                 scope.setpId(pId);
                 scope.setName(pName);
+                scope.setProjectKey(pKey);
                 scope.setProjectPath(pName);
                 scope.setBeginDate("");
                 // endDate - does not exist for jira
